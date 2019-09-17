@@ -1,7 +1,9 @@
 #include <stdio.h>  
 #include <limits.h>//各类型变量范围均在此头文件中  
 int main()  
-{  /*//方法一 
+{  
+/*
+	//方法一 
     printf("signed char min = %d\n",SCHAR_MIN);  
     printf("signed char max = %d\n",SCHAR_MAX);  
     printf("signed short min = %d\n",SHRT_MIN);  
@@ -19,7 +21,7 @@ int main()
     printf("unsigned int max = %u\n",UINT_MAX);  
    // printf("unsigned long min =%lu\n",ULONG_MIN);  
     printf("unsigned long max = %lu\n",ULONG_MAX);  
-	*/
+*/
 	
 	//方法二（直接计算） 
 	printf("signed char min = %d\n",-(char)((unsigned char)~0 >> 1));  
