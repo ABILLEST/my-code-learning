@@ -5,8 +5,10 @@ using namespace std;
 #define error -1
 #define LEFT_ROL 0
 #define RIGHT_ROL 1
+#define ElemType int
+#define Status int
 
-int equal(int a, int b)
+Status equal(ElemType a, ElemType b)
 {
 	if(a==b){
 		return 1;
@@ -17,26 +19,26 @@ int equal(int a, int b)
 class SeqList
 {
 	private:
-		int *list;
+		ElemType *list;
 		int maxsize;
 		int size;
 	public:
 		SeqList();
 		SeqList(int *l, int ms, int s);
 		~SeqList();
-		int list_size();
-		int list_insert(int i, int item);
-		int list_del(int i);
-		int list_get(int i);
+		Status list_size();
+		Status list_insert(int i, ElemType item);
+		Status list_del(int i, ElemType &item);
+		Status list_get(int i);		//按序号查找元素 
 		void list_display();
-		int multiInsert(int i, int n, int item[]);
-		int multiDel(int i, int n);
-		int mergeUp(SeqList& var);
-		int mergeDown(SeqList& var);
-		int Rol(int diretion, int n);
-		bool ListEmpty();
-		int LocateElem(int e,int(*compare)(int,int));
-		void list_union(SeqList& lb);
+		Status multiInsert(int i, int n, ElemType item[]);
+		Status multiDel(int i, int n);
+		Status mergeUp(SeqList& var);
+		Status mergeDown(SeqList& var);
+		Status Rol(int diretion, int n);
+		Status ListEmpty();
+		Status LocateElem(ElemType e,ElemType(*compare)(ElemType,ElemType));	//按内容查找元素 
+		Status list_union(SeqList& lb);
 		
 		friend void merge(SeqList* LA, SeqList* LB, SeqList* LC);
 };
@@ -45,10 +47,10 @@ SeqList::SeqList()
 {
 	maxsize = 1000;
 	size = 0;
-	list = new int[maxsize];
+	list = new ElemType[maxsize];
 }
 
-SeqList::SeqList(int *l, int ms=1000, int s=0)
+SeqList::SeqList(ElemType *l, int ms=1000, int s=0)
 {
 	list = l;
 	maxsize = ms;
@@ -65,13 +67,13 @@ int SeqList::list_size()
 	return size;
 }
 
-int SeqList::list_insert(int i, int item)
+int SeqList::list_insert(int i, ElemType item)
 {
 	if(i<1 || i>size+1) return error;
 	if(size >= maxsize) return error;
 	
-	int *q = &(list[i-1]);
-	int *p = NULL;
+	ElemType *q = &(list[i-1]);
+	ElemType *p = NULL;
 	
 	//插入位置后数据元素后移 
 	for(p=&(list[size-1]); p>=q; --p)
@@ -89,7 +91,7 @@ int SeqList::list_insert(int i, int item)
 	return ok;
 }
 
-int SeqList::list_get(int i)
+int SeqList::list_get(ElemType i)
 {
 	if(i<=size && i>=1)
 	{
@@ -101,20 +103,34 @@ int SeqList::list_get(int i)
 	}
 }
 
-int SeqList::list_del(int i)
+int SeqList::list_del(int i, ElemType &item)
 {
-	if(i<=size&&(size-1>=0))
-	{
-		for(int j=i-1; j<size; ++j)
-		{
-			list[j] = list[j+1];
-		}
-		size-=1;
-		return ok;
-	}
-	else{
-		return error;
-	}
+	//指针法 
+	if((i<1) || (i>size)) return error;
+	
+	ElemType *p = &(list[i-1]);		//删除位置
+	item = *p;
+	
+	ElemType *q = list+size-1;	//表尾位置
+	
+	for(++p; p<=q; ++p) *(p-1) = *p;	//元素前移 
+	--size;
+	
+	return ok;
+	
+	//数组法 
+//	if(i<=size&&(size-1>=0))
+//	{
+//		for(int j=i-1; j<size; ++j)
+//		{
+//			list[j] = list[j+1];
+//		}
+//		size-=1;
+//		return ok;
+//	}
+//	else{
+//		return error;
+//	}
 }
 
 void SeqList::list_display()
@@ -160,6 +176,7 @@ int SeqList::multiDel(int i, int n)
 	}
 }
 
+//先合并后排序，O(n^2) 
 int SeqList::mergeUp(SeqList& var)
 {
 	multiInsert(size,var.size,var.list);
@@ -229,7 +246,7 @@ int SeqList::Rol(int direction,int n)
 	else return error;
 }
 
-bool SeqList::ListEmpty()
+Status SeqList::ListEmpty()
 {
 	if(0==size)
 	{
@@ -248,8 +265,8 @@ int SeqList::LocateElem(int e,int(*equal)(int,int))
 	else return error;
 }
 
-//把所有在lb中但不在list中的数据元素插入到list中 
-void SeqList::list_union(SeqList& lb)
+//把所有在lb中但不在list中的数据元素插入到list中 ,O(n^2)
+Status SeqList::list_union(SeqList& lb)
 {
 	for(int i=1; i<=lb.size; ++i)
 	{
@@ -259,6 +276,8 @@ void SeqList::list_union(SeqList& lb)
 			list_insert(size+1, e);
 		}
 	}
+	
+	return ok;
 }
 
 void merge(SeqList* LA, SeqList* LB, SeqList* LC)
@@ -296,7 +315,7 @@ void merge(SeqList* LA, SeqList* LB, SeqList* LC)
 
 int main()
 {
-	int s,insLoc,item,delLoc,getLoc;
+	int s,insLoc,item,delLoc,getLoc,e;
 	cin>>s;
 	 
 	int *l = new int[100];
@@ -327,7 +346,7 @@ int main()
 	}
 	
 	cin>>delLoc;
-	if(sl.list_del(delLoc)==-1)
+	if(sl.list_del(delLoc,e)==-1)
 	{
 		cout<<"error"<<endl;
 	}
@@ -336,7 +355,7 @@ int main()
 	}
 	
 	cin>>delLoc;
-	if(sl.list_del(delLoc)==-1)
+	if(sl.list_del(delLoc,e)==-1)
 	{
 		cout<<"error"<<endl;
 	}

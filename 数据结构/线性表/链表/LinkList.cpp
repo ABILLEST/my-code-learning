@@ -3,11 +3,12 @@ using namespace std;
 
 #define ok 0
 #define error -1
+#define Status int
 
 class ListNode
 {
 	public:
-		int data;
+		Status data;
 		ListNode* next;
 };
 
@@ -18,21 +19,26 @@ class LinkList
 		ListNode* head,tail;
 		
 		LinkList();
-		LinkList(int n);
+		Status Init_LL(int n);
 		~LinkList();
+		int getLen(){ return len; }	//获取链表长 
+		Status GetElem(int i,Status& e);	//获取指定节点的数据 
+		Status ListIns(int i,Status e);	//在指定位置插入节点 
+		Status ListDel(int i,Status &e);	//删除指定位置加点
+		void display();
+		
 		//void ClearList();
 		//void InsFirst(ListNode* h, ListNode* s);
 		//void DelFirst(ListNode* h, ListNode& q);
 		//void append(ListNode* s);
-		int getLen(){ return len; }
-		ListNode* LL_index(int i);
-		ListNode* LL_PrvIndex(int i);
-		int GetElem(int i,int& e);
-		int ListIns(int i,int e);
-		int ListDel(int i,int &e);
-		int swap(int pa,int pb);
-		void display();
-		int LL_merge(ListNode *La, ListNode *Lb, ListNode* Lc);
+		
+		ListNode* LL_index(int i);	//获取第i个的节点 
+		ListNode* LL_PrvIndex(int i);//获取第i个节点的前驱 
+		Status swap(int pa,int pb);	//交换两个位置的数据 
+		Status LL_merge(ListNode *La, ListNode *Lb, ListNode* Lc);	//顺序合并
+		Status LL_Difference(ListNode* Lb); 
+		Status LL_Reverse();
+		void BinAddOne();
 
 		friend int ListLength(LinkList L);
 };
@@ -43,7 +49,7 @@ LinkList::LinkList()
 	head->next = NULL;
 }
 
-LinkList::LinkList(int n)
+Status LinkList::Init_LL(int n)
 {
 	len = n;
 	head = new ListNode;
@@ -125,7 +131,7 @@ int LinkList::ListIns(int i,int e)
 	if(!p || j>i-1) return error;
 	
 	ListNode *s = new ListNode;
-	s->next = p->next;
+	s->next = p->next;		//先改后指针再改前指针，只需要2条语句 
 	p->next = s;
 	s->data = e;
 	++len;
@@ -220,6 +226,85 @@ int LinkList::LL_merge(ListNode *La, ListNode *Lb, ListNode* Lc)
 	pc->next = pa ? pa : pb;	//插入剩余段
 }
 
+//求当前表与表Lb的差，结果保存在当前表中 
+Status LinkList::LL_Difference(ListNode* Lb)
+{
+	ListNode *pre, *p, *q, *r;
+	
+	//当前表指针 
+	pre = head;
+	p = head->next;
+	
+	while(p!=NULL)
+	{
+		q = Lb->next;
+		while(q!=NULL && q->data!=p->data)
+		{
+			q = q->next;
+		}
+		if(q!=NULL)		//找到相同值，删除节点 
+		{
+			r = p;
+			pre->next = p->next;
+			p = p->next;
+			free(r);
+		}
+		else
+		{
+			pre = p;
+			p = p->next;
+		} 
+	}
+}
+
+//就地逆置
+Status LinkList::LL_Reverse()
+{
+	ListNode* p = head->next;	//保留第一个元素的位置 
+	ListNode* q = NULL;			//头结点的next置空获得新链表 
+	head->next = NULL;
+	while(p!=NULL)
+	{
+		q = p->next;		//暂存原链 
+		
+		p->next = head->next;	//头部插入 
+		head->next = p;
+		
+		p = q;
+	}
+	return ok;
+}
+
+//二进制数加一 
+void LinkList::BinAddOne()
+{
+	ListNode *q, *r, *s;
+	
+	q = head->next;
+	r = head;
+	
+	while(q!=NULL)		//查找最后一个为0的节点 
+	{
+		if(q->data == 0) r = q;
+		q = q->next;
+	}
+	if(r!=head) r->data = 1;	//置1
+	else{
+		s = new ListNode;
+		s->data = 1;
+		//头插
+		s->next = head->next;
+		head->next = s;
+		r = s; 
+	}
+	r = r->next;
+	while(r!=NULL)		//将后面的节点置0
+	{
+		r->data = 0;
+		r = r->next;
+	}
+}
+
 
 int ListLength(LinkList L)
 {
@@ -237,15 +322,66 @@ int ListLength(LinkList L)
 
 int main()
 {
-	int n, pos1, pos2, e;
-	cin>>n;
-	LinkList L1(n);
-	cin>>n;
-	LinkList L2(n);
-	LinkList L3;
-	
-	L1.LL_merge(L1.head, L2.head, L3.head);
-	L3.display();
+	int n, Pos, e;
+    cin>>n;
+    LinkList L;
+    L.Init_LL(n);
+    L.display();
+     
+    cin>>Pos>>e;
+    if(L.ListIns(Pos,e)==error)
+    {
+        cout<<"error"<<endl;
+    }
+    else{
+        L.display();
+    }
+     
+     
+    cin>>Pos>>e;
+    if(L.ListIns(Pos,e)==error)
+    {
+        cout<<"error"<<endl;
+    }
+    else{
+        L.display();
+    }
+     
+    cin>>Pos;
+    if(L.ListDel(Pos,e)==error)
+    {
+        cout<<"error"<<endl;
+    }
+    else{
+        L.display();
+    }
+     
+    cin>>Pos;
+    if(L.ListDel(Pos,e)==error)
+    {
+        cout<<"error"<<endl;
+    }
+    else{
+        L.display();
+    }
+     
+    cin>>Pos;
+    if(L.ListDel(Pos,e)==error)
+    {
+        cout<<"error"<<endl;
+    }
+    else{
+        cout<<e<<endl;
+    }
+ 
+    cin>>Pos;
+    if(L.ListDel(Pos,e)==error)
+    {
+        cout<<"error"<<endl;
+    }
+    else{
+        cout<<e<<endl;
+    }
 	
 	return 0;
 }
