@@ -48,7 +48,16 @@ DuLinkList::~DuLinkList()
 //获取第i个位置的地址 
 DuLNode* DuLinkList::GetElemP_DuL(int i)
 {
-	
+	DuLNode* p = head;
+	int count=0;
+
+	while(p->next && count<i-1)
+	{
+		p = p->next;
+		++count;
+	}
+	if(!(p->next) || count>i-1) return NULL;
+	return p;
 }
 
 Status DuLinkList::Insert_DuL(int i, Elemtype e)

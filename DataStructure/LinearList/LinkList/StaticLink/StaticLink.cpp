@@ -23,7 +23,7 @@ class StaticList
 {
 private:
 	SL_Node space[MAXSIZE];
-	int free_node;	//空闲链表表头 
+	int used_head, free_head;	//空闲链表表头 
 	int len;
 public:
 	StaticList();
@@ -34,9 +34,9 @@ public:
 	int Malloc_SL();
 	void Free_SL(int k);
 	void difference(int &s);
-	bool Insert_SL(const ElemType &e, int index=1);
+	Status Insert_SL(const ElemType &e, int index=1);
 	bool Delete_SL(ElemType &e, int index=1);
-	bool Append_SL();
+	Status Append_SL();
 	void display_SL() const;
 	int length();
 	
@@ -46,7 +46,7 @@ public:
 StaticList::StaticList()
 {
 	space[0].cur = -1;
-	free_node = 1;
+	free_head = 1;
 	for(int i=1; i<MAXSIZE-1; ++i)
 		space[i].cur = i+1;
 	space[MAXSIZE-1].cur = -1;
@@ -102,13 +102,13 @@ void StaticList::Free_SL(int k)
 	space[0].cur = k;
 }
 
-//(A-B)∪(B-A) 
-void StaticList::difference(const StaticList LB, int &s)
+//(A-B)∪(B-A) ,当前表为表A，参数表B
+void StaticList::difference(int &S)
 {
 	int nA,nB,i,k;
 	
 	InitSpace_SL();		//初始化备用空间 
-	int S = Malloc_SL();//生成S的头结点 
+	S = Malloc_SL();	//生成S的头结点 
 	int r = S;			//r指向S的当前最后节点 
 	
 	cin>>nA>>nB;		//输入A和B的元素个数 
@@ -117,6 +117,7 @@ void StaticList::difference(const StaticList LB, int &s)
 		i = Malloc_SL();		//分配节点 
 		cin>>space[i].data;	 
 		space[r].cur = i;		//插入到表尾 
+		++len;
 		r = i;
 	}
 	space[r].cur = 0;	//尾节点的指针为空
@@ -128,7 +129,7 @@ void StaticList::difference(const StaticList LB, int &s)
 		
 		int p = S;
 		k = space[S].cur;	//k指向集合A中的首节点 
-		while(k!=space[r].cur && space[k].data!=b)	//在当前表中查找 
+		while(k!=space[r].cur && space[k].data!=b)	//在当前表中查找是否存在该元素
 		{
 			p = k;
 			k = space[k].cur;
@@ -139,6 +140,7 @@ void StaticList::difference(const StaticList LB, int &s)
 			space[i].data = b;
 			space[i].cur = space[r].cur;
 			space[r].cur = i;
+			++len;
 		}
 		else	//已存在，删除 
 		{
@@ -149,9 +151,19 @@ void StaticList::difference(const StaticList LB, int &s)
 	}
 }
 
+Status StaticList::Insert_SL(const int &e, int index)
+{
+	return ok;
+}
+
+Status StaticList::Append_SL()
+{
+	return ok;
+}
+
 void StaticList::display_SL() const
 {
-	for(int i=1; i<=len; ++i)
+	for(int i=used_head; space[i].cur!=0; i=space[i].cur)
 	{
 		cout<<space[i].data<<" ";
 	}
@@ -164,12 +176,12 @@ int main()
 	int n,s;
 	
 	
-	cin>>n;
-	StaticList LA(n);
+	//cin>>n;
+	StaticList LA;
 	//cin>>n;
 	//StaticList LB(n);
 	
-	cout<<"LA: "; LA.display_SL();
+	//cout<<"LA: "; LA.display_SL();
 	//cout<<"LB: "; LB.display_SL();
 	
 	LA.difference(s);
