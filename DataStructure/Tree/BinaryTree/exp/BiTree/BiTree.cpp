@@ -41,6 +41,7 @@ BiTree::~BiTree()
 {
 }
 
+//利用先序遍历结果建树
 void BiTree::CreateTree(string TreeArray)
 {
     pos = 0;
@@ -48,6 +49,7 @@ void BiTree::CreateTree(string TreeArray)
     Root = CreateBiTree();
 }
 
+//递归建树，类内实现
 BiTreeNode *BiTree::CreateBiTree()
 {
     BiTreeNode *T;
@@ -59,10 +61,10 @@ BiTreeNode *BiTree::CreateBiTree()
     }
     else
     {
-        T = new BiTreeNode();
+        T = new BiTreeNode();   //生成根节点
         T->data = ch;
-        T->LeftChild = CreateBiTree();
-        T->RightChild = CreateBiTree();
+        T->LeftChild = CreateBiTree();  //构造左子树
+        T->RightChild = CreateBiTree(); //构造右子树
     }
 
     return T;
@@ -77,7 +79,7 @@ void BiTree::PreOrder(BiTreeNode *t)
 {
     if (t)
     {
-        cout << t->data;
+        cout << t->data;    //代表已访问
         PreOrder(t->LeftChild);
         PreOrder(t->RightChild);
     }

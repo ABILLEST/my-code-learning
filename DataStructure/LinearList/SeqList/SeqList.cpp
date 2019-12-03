@@ -265,26 +265,29 @@ int SeqList::LocateElem(int e,int(*equal)(int,int))
 	else return error;
 }
 
-//把所有在lb中但不在list中的数据元素插入到list中 ,O(n^2)
+//两表合并，把所有在lb中但不在list中的数据元素插入到list中 ,O(n^2)
 Status SeqList::list_union(SeqList& lb)
 {
-	for(int i=1; i<=lb.size; ++i)
+	int lb_len = lb.size;
+	for(int i=1; i<=lb_len; ++i)
 	{
 		int e = lb.list[i-1];
 		if(LocateElem(e,equal)==-1)
 		{
-			list_insert(size+1, e);
+			list_insert(this->size+1, e);
 		}
 	}
 	
 	return ok;
 }
 
+//递减合并 ，要求LA、LB有序且同序，O(n) 
 void merge(SeqList* LA, SeqList* LB, SeqList* LC)
 {
 	int i,j,k,l;
-	i=0;j=0;k=0;
+	i=0;j=0;k=0;		//分别指向LA,LB,LC的当前元素位置 
 	
+	//当表未遍历完时，判断两表当前元素的大小，插入并移动LC指示变量。 
 	while(i<=LA->size && j<=LB->size)
 	{
 		if(LA->list[i] <= LB->list[j])
@@ -300,7 +303,7 @@ void merge(SeqList* LA, SeqList* LB, SeqList* LC)
 	}
 	while(i<=LA->size)	//表A比表B长时
 	{
-		LC->list[k] = LA->list[i];
+		LC->list[k] = LA->list[i];		//剩余元素进表 
 		i++;k++;
 	}
 	while(i<=LB->size)	//表B比表A长时
