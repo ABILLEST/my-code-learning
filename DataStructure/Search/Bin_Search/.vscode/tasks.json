@@ -4,10 +4,10 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build LinkList",
+            "label": "build Bin_Search",
             "type": "shell",
             "command": "g++",
-            "args": ["-g","-o","LinkList","LinkList.cpp"],
+            "args": ["-g","-o","Bin_Search","Bin_Search.cpp"],
             "group": {
                 "kind": "build",
                 "isDefault": true

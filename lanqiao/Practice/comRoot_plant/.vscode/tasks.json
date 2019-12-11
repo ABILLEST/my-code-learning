@@ -4,10 +4,10 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build LinkList",
+            "label": "build comRoot_plant",
             "type": "shell",
             "command": "g++",
-            "args": ["-g","-o","LinkList","LinkList.cpp"],
+            "args": ["-g","-o","comRoot_plant","comRoot_plant.cpp"],
             "group": {
                 "kind": "build",
                 "isDefault": true

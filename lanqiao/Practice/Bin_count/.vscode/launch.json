@@ -8,7 +8,7 @@
         "name": "(gdb) Launch",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/LinkList.exe",
+        "program": "${workspaceFolder}/Bin_count.exe",
         "args": [],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",

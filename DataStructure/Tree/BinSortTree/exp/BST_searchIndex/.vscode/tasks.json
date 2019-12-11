@@ -4,10 +4,10 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build LinkList",
+            "label": "build BST_searchIndex",
             "type": "shell",
             "command": "g++",
-            "args": ["-g","-o","LinkList","LinkList.cpp"],
+            "args": ["-g","-o","BST_searchIndex","BST_searchIndex.cpp"],
             "group": {
                 "kind": "build",
                 "isDefault": true

@@ -19,7 +19,7 @@ class LinkList
 		ListNode* head,tail;
 		
 		LinkList();
-		Status Init_LL(int n);
+		void Init_LL(int n);
 		~LinkList();
 		int getLen(){ return len; }	//获取链表长 
 		Status GetElem(int i,Status& e);	//获取指定节点的数据 
@@ -49,7 +49,7 @@ LinkList::LinkList()
 	head->next = NULL;
 }
 
-Status LinkList::Init_LL(int n)
+void LinkList::Init_LL(int n)
 {
 	len = n;
 	head = new ListNode;
@@ -95,6 +95,7 @@ ListNode* LinkList::LL_index(int i)
 	return p;
 }
 
+//获取i位置的前驱p
 ListNode* LinkList::LL_PrvIndex(int i)
 {
 	ListNode* p = head;
@@ -118,30 +119,33 @@ int LinkList::GetElem(int i,int& e)
 	return ok;
 }
 
+//在指定位置插入元素
 int LinkList::ListIns(int i,int e)
 {
 	int j=0;
-	ListNode* p = head;
 	
-	while(p && j<i-1)
-	{
-		p = p->next;
-		++j;
-	}
-	if(!p || j>i-1) return error;
+	//查找元素
+	ListNode* p = LL_PrvIndex(i);
+
+	//插入位置不合法
+	if(!p) return error;
 	
+	//入链
 	ListNode *s = new ListNode;
 	s->next = p->next;		//先改后指针再改前指针，只需要2条语句 
 	p->next = s;
+
+	//连带操作
 	s->data = e;
 	++len;
+
 	return ok;
 }
 
 int LinkList::ListDel(int i,int &e)
 {
 	int j=0;
-	ListNode* q=NULL;
+	ListNode* q = new ListNode;
 	
 	if(!i) return error;	//头结点不可删除 
 	
@@ -151,7 +155,7 @@ int LinkList::ListDel(int i,int &e)
 	e = p->next->data;
 	q = p->next;
 	p->next = p->next->next;
-	free(q);
+	delete q;
 	--len;
 	return ok;
 }
@@ -197,7 +201,8 @@ int LinkList::swap(int pa,int pb)
 	}
 }
 
-int LinkList::LL_merge(ListNode *La, ListNode *Lb, ListNode* Lc)
+//非原地算法，并未体现链表合并的优势
+int LinkList::LL_merge(ListNode *La, ListNode *Lb, ListNode* Lc)	
 {
 	ListNode *pa = La->next;
 	ListNode *pb = Lb->next;
@@ -223,6 +228,7 @@ int LinkList::LL_merge(ListNode *La, ListNode *Lb, ListNode* Lc)
 		pc = pc->next;
 	}
 	
+	//注意下面这条语句，算法结束后B、C两链有重合的部分
 	pc->next = pa ? pa : pb;	//插入剩余段
 }
 

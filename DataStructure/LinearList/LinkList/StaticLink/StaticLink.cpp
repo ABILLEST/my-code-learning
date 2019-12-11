@@ -77,27 +77,31 @@ StaticList::~StaticList()
 int StaticList::LocateElem_SL(ElemType e)
 {
 	int i = space[0].cur;	//i指示表中第一个节点 
-	while(i && space[i].data!=e) i=space[i].cur;
+	while(i && space[i].data!=e) i=space[i].cur;	//顺链查找
 	return i;
 }
 
+//将space中各分量链成一个备用链表, "0"表示空指针
 void StaticList::InitSpace_SL()
 {
-	for(int i=0; i<MAXSIZE-1; ++i) space[i].cur = i+1;
+	for(int i=0; i<MAXSIZE-1; ++i)
+		space[i].cur = i+1;
 	space[MAXSIZE-1].cur = 0;
 }
 
-//若链表非空，则返回分配的节点下标，否则返回0 
+//若备用链表非空，则返回分配的节点下标，否则返回0 
 int StaticList::Malloc_SL()
 {
-	int i=space[0].cur;
-	if(space[0].cur) space[0].cur = space[i].cur;
+	int i = space[0].cur;		//获取第一个空闲位置
+	if(space[0].cur)
+		space[0].cur = space[i].cur;	//从表头取空闲节点
 	return i; 
 }
 
 //将下标为k的空闲节点回收到备用链表 
 void StaticList::Free_SL(int k)
 {
+	//头插法
 	space[k].cur = space[0].cur;
 	space[0].cur = k;
 }
