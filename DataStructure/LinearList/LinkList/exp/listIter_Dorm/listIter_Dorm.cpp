@@ -2,10 +2,12 @@
 #include<list>
 #include<vector>
 using namespace std;
+
 const int maxx= 50;
 string str[maxx];
 list<int> l1;
 list<int> l2;
+
 void ass(string s){//安排学生
     list<int>::iterator it= l2.begin();
 //  cout<<*it;
@@ -13,9 +15,8 @@ void ass(string s){//安排学生
     l1.push_back(*it);
     l2.pop_front();
 
-
-
 }
+
 void ret(int i){//归还宿舍
     list<int>::iterator it= l1.begin();
     while(it!= l1.end()){
@@ -27,6 +28,7 @@ void ret(int i){//归还宿舍
     l1.erase(it);
 
 }
+
 void used(){//输出已用的宿舍号
     l1.sort(); 
     list<int>::iterator it= l1.begin();
@@ -38,6 +40,7 @@ void used(){//输出已用的宿舍号
     }
     cout<<endl;
 }
+
 void fre(){//输出可使用的宿舍号
     list<int>::iterator it= l2.begin();
     while(it!= l2.end()){
@@ -47,6 +50,7 @@ void fre(){//输出可使用的宿舍号
          cout<<'-';
     }
 }
+
 int main(){
 
 

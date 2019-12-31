@@ -25,9 +25,9 @@ private:
 	SL_Node space[MAXSIZE]; 
 	int len;
 public:
-	StaticList();
+	StaticList(){}
 	StaticList(int n);
-	~StaticList();
+	~StaticList(){}
 	int LocateElem_SL(ElemType e);
 	void InitSpace_SL();
 	int Index_SL(int i);
@@ -40,23 +40,11 @@ public:
 	void display_SL() const;
 	int length();
 	
-	Status Dorm_Init(StaticList &freeList, int n);
+	Status Dorm_Init(int n);
 	Status Assign(string name,StaticList &free);
 	Status Return(int roomNum,StaticList &free);
 	void display_used();
 };
-
-//构造已用空间为空表，其余空间为备用表 
-StaticList::StaticList() : len(0)
-{
-	space[0].cur = -1;	//已用空间为空 
-	for(int i=1; i<MAXSIZE-1; ++i)
-	{
-		space[i].cur = i+1;	
-	}
-	
-	space[MAXSIZE-1].cur = -1 ;
-}
 
 StaticList::StaticList(int n)
 {
@@ -89,7 +77,8 @@ int StaticList::LocateElem_SL(ElemType e)
 
 void StaticList::InitSpace_SL()
 {
-	for(int i=0; i<MAXSIZE-1; ++i) space[i].cur = i+1;
+	for(int i=0; i<MAXSIZE-1; ++i) 
+		space[i].cur = i+1;
 	space[MAXSIZE-1].cur = 0;
 }
 
@@ -115,7 +104,8 @@ int StaticList::Malloc_SL()
 {
 	int i=space[0].cur;
 	//设置下一次第一个可用的空闲节点为返回节点的下一个节点
-	if(space[0].cur) space[0].cur = space[i].cur;
+	if(space[0].cur) 
+		space[0].cur = space[i].cur;
 	return i; 
 }
 
@@ -164,23 +154,18 @@ Status StaticList::difference(int &s)
 	
 }
 //
-Status StaticList::Dorm_Init( StaticList &freeL, int n)
+Status StaticList::Dorm_Init(int n)
 {
 	string name;
 	ElemType e;
 	int roomNum, p,q, last;
 	
 	//初始化房间号 
-	freeL.len = 0;
 	this->len = 0;
-	space[0].cur = 1;
-	freeL.space[0].cur = 1;
-	for(int j=1; j<=MAXSIZE; ++j)
-	{
-		freeL.space[j].data = 100+j;
-		freeL.space[j].cur = j+1;
-	}
-	freeL.space[MAXSIZE].cur = 0;
+	space[0].cur = 100;
+	for(int i=1; i<MAXSIZE-1; ++i) 
+		space[i].cur = 100+i+1;
+	space[MAXSIZE-1].cur = 100;
 	
 	this->InitSpace_SL();
 	q = this->Malloc_SL();	//生成头结点 
@@ -201,6 +186,8 @@ Status StaticList::Dorm_Init( StaticList &freeL, int n)
 	}
 	space[last].cur = 0;
 	len = n;
+
+
 
 	return ok;
 } 

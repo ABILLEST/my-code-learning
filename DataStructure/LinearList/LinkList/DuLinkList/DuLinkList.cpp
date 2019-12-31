@@ -1,8 +1,6 @@
 #include <iostream>
 using namespace std;
 
-#define ok 0
-#define error -1
 #define Elemtype int
 #define Status int
 
@@ -64,9 +62,9 @@ Status DuLinkList::Insert_DuL(int i, Elemtype e)
 {
 	DuLNode *s, *p;
 	
-	if(!(p = GetElemP_DuL(i))) return error;	//插入位置不合法
+	if(!(p = GetElemP_DuL(i))) return false;	//插入位置不合法
 	s = new DuLNode;
-	if(!s) return error;
+	if(!s) return false;
 	
 	s->data = e;
 	//修改挂链 
@@ -75,22 +73,22 @@ Status DuLinkList::Insert_DuL(int i, Elemtype e)
 	s->next = p;
 	p->prior = s;
 	
-	return ok;
+	return true;
 }
 
 Status DuLinkList::Delete_DuL(int i, Elemtype &e)
 {
 	DuLNode *p;
 	
-	if(!(p = GetElemP_DuL(i))) return error;
+	if(!(p = GetElemP_DuL(i))) return false;
 	
 	e = p->data;
 	//修改挂链
 	p->prior->next = p->next;
 	p->next->prior = p->prior;
 	
-	free(p);
-	return ok; 
+	delete p;
+	return true; 
 }
 
 int main()

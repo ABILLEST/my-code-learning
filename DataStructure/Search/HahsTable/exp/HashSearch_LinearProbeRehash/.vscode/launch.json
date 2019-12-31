@@ -8,7 +8,7 @@
         "name": "(gdb) Launch",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/PolyList.exe",
+        "program": "${workspaceFolder}/HashSearch_LinearProbeRehash.exe",
         "args": [],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",

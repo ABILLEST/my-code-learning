@@ -4,10 +4,10 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build PolyList",
+            "label": "build HashSearch_LinearProbeRehash",
             "type": "shell",
             "command": "g++",
-            "args": ["-g","-o","PolyList","PolyList.cpp"],
+            "args": ["-g","-o","HashSearch_LinearProbeRehash","HashSearch_LinearProbeRehash.cpp"],
             "group": {
                 "kind": "build",
                 "isDefault": true
